@@ -1,0 +1,17 @@
+{
+  "scraperId": "scraperLaptop",
+  "deviceId": "deviceLaptop",
+  "appId": "deviceTestApp",
+  "libgenUrl":"",
+  "apiUrl2":"http://localhost:3000",
+  "apiUrl":"https://walrus-app-kitxm.ondigitalocean.app/news-scraper-api2",
+  "useSqliteDb": true,
+  "useMongoDb": false,
+  "searches": [
+    "wolf"
+  ],
+  "scrapingSettings": {
+      "maxPages": 1
+      
+  }
+}
