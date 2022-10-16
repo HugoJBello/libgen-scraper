@@ -71,6 +71,8 @@ export default class ScraperApp {
         let globalConfig = await this.persistenceManager.findCurrentGlogalConfig()
         if (globalConfig) {
             this.globalConfig = globalConfig
+            this.globalConfig.searches = await this.configManager.extractSearchesList(globalConfig)
+
         } else {
             console.log("global config nof found, starting new one");
             
