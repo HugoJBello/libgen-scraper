@@ -45,7 +45,7 @@ export default class ScraperApp {
 
         const searchessReordered = this.reorderSearchArrayStartingWithLastScraped()
         this.pageScraper = new LibgenUrlContentScraper(),
-        this.urlSectionExtractorScraper =  new LibgenIndexScraper()
+        this.urlSectionExtractorScraper =  new LibgenIndexScraper(this.config.baseLibgenUrl)
 
         const indexes = [] as ScrapingIndexI[]
         for (let search of searchessReordered) {
@@ -70,12 +70,16 @@ export default class ScraperApp {
             console.log("global config nof found, starting new one");
             
             globalConfig = {} as GlobalConfigI
+            globalConfig.parentPath = this.config.parentPath
             globalConfig.scraperId = this.config.scraperId
             globalConfig.deviceId = this.config.deviceId
+            globalConfig.baseLibgenUrl = this.config.baseLibgenUrl
             globalConfig.lastSearch = this.config.searches[0]
             globalConfig.lastActive = new Date()
             this.globalConfig = globalConfig
             await this.persistenceManager.updateGlobalConfig(globalConfig)
+            
+            this.downloader = new DownloaderUrl(globalConfig.parentPath)
         }
     }
 
@@ -93,11 +97,11 @@ export default class ScraperApp {
 
     }
 
-    async prepareIndex(newspaper: string): Promise<ScrapingIndexI> {
-        let indexScraper = await this.persistenceManager.findCurrentIndex(newspaper)
+    async prepareIndex(search: string): Promise<ScrapingIndexI> {
+        let indexScraper = await this.persistenceManager.findCurrentIndex(search)
         if (!indexScraper || !indexScraper.scraperId) {
             console.log("not found index", indexScraper)
-            indexScraper = this.loadIndexFromConfig(newspaper)
+            indexScraper = this.loadIndexFromConfig(search)
         }
 
         await this.persistenceManager.updateIndex(indexScraper)
@@ -117,7 +121,8 @@ export default class ScraperApp {
         indexScraper.search = search
         indexScraper.scraperId = this.config.scraperId
         indexScraper.deviceId = this.config.deviceId
-        indexScraper.maxPages = this.config.scrapingSettings.maxPages        
+        indexScraper.maxPages = this.config.scrapingSettings.maxPages 
+        
         return indexScraper
     }
 
@@ -142,7 +147,6 @@ export default class ScraperApp {
     async scrapOneIterationFromOneScraper(scrapingIndex: ScrapingIndexI) {
         
         await this.refreshGlobalConfigFromIndex(scrapingIndex)
-
         const urls = await this.urlSectionExtractorScraper.extractNewsUrlsInSectionPageFromIndexOneIteration(scrapingIndex)
         scrapingIndex.currentScrapingUrlList = urls
         console.log("--->  starting scraping urls ")
@@ -167,7 +171,7 @@ export default class ScraperApp {
                 console.log(extractedNews)
                 await this.persistenceManager.saveNewsScraped(extractedNews)
 
-                await this.downloader.download(extractedNews.downloadUrl, extractedNews.filename)
+                await this.downloader.download(extractedNews.downloadUrl, extractedNews.filename, this.config.parentPath + "/" + extractedNews.search)
             }
 
             scrapingIndex.pageNewIndex = scrapingIndex.pageNewIndex + 1

@@ -5,7 +5,7 @@ export interface ScrapingConfigI{
     apiUrl: string;
     appId: string;
     deviceId:string;
-    newspapers:string[];
+    searches:string[];
     useSqliteDb: boolean;
     useMongoDb: boolean;
     scrapingSettings: Map<string, ScrapingSettings>;

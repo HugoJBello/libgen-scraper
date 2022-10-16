@@ -7,5 +7,8 @@ export interface GlobalConfigI {
     lastSearch: string;
     deviceId: string;
     id: number;
+    parentPath: string;
+    searches: string[];
+    baseLibgenUrl: string;
 }
 

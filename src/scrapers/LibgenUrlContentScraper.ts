@@ -12,7 +12,7 @@ import fs from 'fs';
 export class LibgenUrlContentScraper extends ContentScraper {
     public timeWaitStart: number
     public timeWaitClick: number
-    public newspaper: string
+    public search: string
     public scraperId: string
 
     constructor() {
@@ -63,8 +63,9 @@ export class LibgenUrlContentScraper extends ContentScraper {
         const filename = decodeURI(downloadUrl.split("/")[ downloadUrl.split("/").length -1])
 
         const date = new Date
+        const id = v4()
         
-        const result = { search, documentUrl, date, scrapedAt: date, downloadUrl, filename} as DocumentUrlContentI
+        const result = {id, search, documentUrl, date, scrapedAt: date, downloadUrl, filename} as DocumentUrlContentI
 
         console.log(result)
 

@@ -13,4 +13,5 @@ export interface DocumentUrlContentI {
     scrapingIteration: number
     id: string
     newsIndex: number
+    url: string
 }

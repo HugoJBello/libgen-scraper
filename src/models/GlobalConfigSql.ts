@@ -6,6 +6,8 @@ export interface GlobalConfigSqlSqlI {
     lastSearch: string;
     deviceId: string;
     id: number;
+    parentPath: string;
+    baseLibgenUrl: string;
 }
 
 export const globalConfigSqlAttributes = {
@@ -20,10 +22,16 @@ export const globalConfigSqlAttributes = {
     scraperId: {
         type: DataTypes.STRING,
     },
+    parentPath: {
+        type: DataTypes.STRING,
+    },
     deviceId: {
         type: DataTypes.STRING,
     },
     lastSearch: {
+        type: DataTypes.STRING,
+    },
+    baseLibgenUrl: {
         type: DataTypes.STRING,
     }
 }

@@ -10,7 +10,7 @@ describe('LibgenUrlContentScraper 1', function () {
         this.timeout(9999999);
 
         const scraper = new LibgenUrlContentScraper();
-        const downloader = new DownloaderUrl()
+        const downloader = new DownloaderUrl("./data")
 
         it('LibgenUrlContentScraper', async function () {
 
@@ -21,7 +21,7 @@ describe('LibgenUrlContentScraper 1', function () {
 
             await scraper.browser.close();
 
-            await downloader.download(result.downloadUrl, result.filename)
+            await downloader.download(result.downloadUrl, result.filename, downloader.parentPath + "/" + "test")
             
             expect(result).to.have.property("downloadUrl")
             

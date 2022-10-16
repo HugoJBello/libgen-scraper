@@ -14,7 +14,7 @@ export class PuppeteerScraper {
     public pageHistoric: any;
     public api: any;
     public page: Page;
-    public newspaper:string;
+    public search:string;
 
     constructor() {
         this.browser = null;

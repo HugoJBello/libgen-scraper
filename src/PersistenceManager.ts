@@ -33,7 +33,7 @@ export default class PersistenceManager {
         const indexDb = {...index}
         const conditions = {
             scraperId: indexDb.scraperId,
-            newspaper: indexDb.search
+            search: indexDb.search
         }
         indexDb.dateScraping = new Date()
 
@@ -60,12 +60,12 @@ export default class PersistenceManager {
 
     }
 
-    async findCurrentIndex(newspaper: string): Promise<ScrapingIndexI> {
+    async findCurrentIndex(search: string): Promise<ScrapingIndexI> {
         let index: ScrapingIndexI
 
         const conditions = {
             scraperId: this.config.scraperId,
-            newspaper: newspaper
+            search: search
         }
 
         if (this.config.useSqliteDb) {

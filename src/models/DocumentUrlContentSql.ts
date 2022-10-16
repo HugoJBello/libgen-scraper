@@ -15,6 +15,7 @@ export interface DocumentUrlContentSqlI {
     scrapingIteration: number
     id: string
     newsIndex: number
+    url:string
 }
 
 export class DocumentUrlContentSql extends Model<DocumentUrlContentSqlI> {
@@ -51,7 +52,10 @@ export const newScrapedSqlAttributes = {
     },
     scrapingIteration: {
         type: DataTypes.NUMBER,
-    }
+    }, 
+    url:{
+        type: DataTypes.STRING,
+    },
 } as any
 
 export const joiningStrtags = ","

@@ -4,11 +4,14 @@
   "appId": "deviceTestApp",
   "libgenUrl":"",
   "apiUrl2":"http://localhost:3000",
+  "baseLibgenUrl" : "http://libgen.st/search.php?req=",
   "apiUrl":"https://walrus-app-kitxm.ondigitalocean.app/news-scraper-api2",
   "useSqliteDb": true,
   "useMongoDb": false,
+  "parentPath":"./data",
   "searches": [
-    "wolf"
+    "virginia wolf",
+    "karl jung"
   ],
   "scrapingSettings": {
       "maxPages": 1

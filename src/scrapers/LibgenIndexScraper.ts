@@ -3,26 +3,30 @@ import {ScrapingIndexI} from "../models/ScrapingIndex";
 import {IndexScraper} from "./IndexScraper";
 
 export class LibgenIndexScraper extends IndexScraper {
-    public timeWaitStart: number
-    public timeWaitClick: number
     public maxPages: number
 
     public urls:string[] = []
     public urlPrefixes:string[] = []
+    public baseLibgenUrl: string = "http://libgen.st/search.php?req="
 
-    constructor() {
+    constructor(baseLibgenUrl: string) {
         super();
-        this.timeWaitStart = 1 * 1000;
-        this.timeWaitClick = 500;
+        this.baseLibgenUrl = baseLibgenUrl
     }
 
-    async extractNewsUrlsInSectionPageFromIndexOneIteration (scrapingIndex: ScrapingIndexI): Promise<string[]> {
-        this.scrapingIndex.pageIndexSection = 1
-    
-        const currentUrl = scrapingIndex.currentScrapingUrlList[this.scrapingIndex.urlIndex]
+    async extractNewsUrlsInSectionPageFromIndexOneIteration (scrapingIndex: ScrapingIndexI): Promise<string[]> {    
+        const currentUrl = this.getCurrentUrl(scrapingIndex.search)
         const extractedUrls = await this.extractUrlsFromStartingUrl(currentUrl)
         const uniqUrls = [...new Set(extractedUrls)];
         return uniqUrls
+    }
+
+    getCurrentUrl(search: string): string{
+        let searchParam = search
+        if(search.includes(" ")){
+            searchParam = search.replace("/\s/g", "+")
+        }
+        return this.baseLibgenUrl + searchParam
     }
 
     checkCorrectUrl(url:string) {
@@ -43,7 +47,8 @@ export class LibgenIndexScraper extends IndexScraper {
     }
 
     async extractUrlsInPage (url: string):Promise<string[]>{
-        // https://www.eldiario.es/
+        //http://libgen.st/search.php?req=karl+jung
+
         const pageUrl = url
 
         console.log("\n************");
@@ -71,29 +76,22 @@ export class LibgenIndexScraper extends IndexScraper {
         }
     }
 
-    async clickOkButtonCookie () {
-        try {
-            const frame = this.page.frames()
-            //frame[2].click('button[title="Fine By Me!"]');
-        } catch (e) {
-
-        }
-    }
 
     async extractUrlsFromPage(): Promise<string[]>{
-        let hrefs = await this.page.$$('h2>a')
+
+        const hrefs = await this.page.$x("//a[contains(text(), '[1]')]");
+
         const urls = []
         for (const hrefv of hrefs){
             let url = await this.page.evaluate((a:any) => a.href, hrefv);
             urls.push(url)
         }
  
-        const date_regex = /[0-9]{7}.html$/
-        //_9282003.html
+        //return urls.filter((href: string) => {
+        //    return date_regex.test(href) && this.checkCorrectUrl(href)
+        //})
 
-        return urls.filter((href: string) => {
-            return date_regex.test(href) && this.checkCorrectUrl(href)
-        })
+        return urls
     }
 
 }
