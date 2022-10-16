@@ -9,7 +9,6 @@ export class LibgenIndexScraper extends IndexScraper {
 
     public urls:string[] = []
     public urlPrefixes:string[] = []
-    public mustStartWith = "https://www.eldiario.es/"
 
     constructor() {
         super();
@@ -27,10 +26,7 @@ export class LibgenIndexScraper extends IndexScraper {
     }
 
     checkCorrectUrl(url:string) {
-        if (url.startsWith(this.mustStartWith)){            
             return true
-        }
-        return false
     }
 
     async extractUrlsFromStartingUrl(url: string): Promise<string[]> {

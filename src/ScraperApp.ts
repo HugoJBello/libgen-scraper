@@ -13,6 +13,7 @@ import {GlobalConfigI} from "./models/GlobalConfig";
 import { initDb } from './models/sequelizeConfig';
 import { LibgenIndexScraper } from './scrapers/LibgenIndexScraper';
 import { LibgenUrlContentScraper } from './scrapers/LibgenUrlContentScraper';
+import { DownloaderUrl } from './scrapers/DownloaderUrl';
 
 require('dotenv').config();
 
@@ -32,6 +33,8 @@ export default class ScraperApp {
 
     public pageScraper: ContentScraper
     public urlSectionExtractorScraper: IndexScraper
+    public downloader: DownloaderUrl
+
     constructor() {
     }
 
@@ -163,6 +166,8 @@ export default class ScraperApp {
                     scrapingIndex.pageNewIndex, scrapingIndex.scrapingIteration)
                 console.log(extractedNews)
                 await this.persistenceManager.saveNewsScraped(extractedNews)
+
+                await this.downloader.download(extractedNews.downloadUrl, extractedNews.filename)
             }
 
             scrapingIndex.pageNewIndex = scrapingIndex.pageNewIndex + 1

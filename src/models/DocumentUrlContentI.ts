@@ -4,6 +4,7 @@
 export interface DocumentUrlContentI {
     search: string
     documentUrl: string
+    filename: string
     downloadUrl: string
     date: Date
     scrapedAt: Date

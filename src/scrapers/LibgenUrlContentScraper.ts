@@ -5,6 +5,8 @@ import {ScrapingIndexI} from "../models/ScrapingIndex";
 import {ContentScraper} from "./ContentScraper";
 import {v4} from 'uuid'
 import { NodeHtmlMarkdown, NodeHtmlMarkdownOptions } from 'node-html-markdown'
+import http from 'http'; // or 'https' for https:// URLs
+import fs from 'fs';
 
 
 export class LibgenUrlContentScraper extends ContentScraper {
@@ -12,7 +14,6 @@ export class LibgenUrlContentScraper extends ContentScraper {
     public timeWaitClick: number
     public newspaper: string
     public scraperId: string
-    public excludedParagraphs: string[] = [' ', '  ', ' \n', '  \n']
 
     constructor() {
         super();
@@ -25,7 +26,7 @@ export class LibgenUrlContentScraper extends ContentScraper {
     }
 
     async extractNewInUrl(documentUrl: string, search: string, scrapingId:string, newsIndex:number, scrapingIteration: number): Promise<DocumentUrlContentI> {
-        // https://www.eldiario.es/politica/gobierno-rebajara-iva-gas-21-5_1_9280249.html
+
         console.log("\n---");
         console.log("extracting full new in url:")
         console.log(documentUrl);
@@ -58,9 +59,12 @@ export class LibgenUrlContentScraper extends ContentScraper {
         const urls = await this.extractUrlsFromPage()
         console.log(urls)
         const downloadUrl = urls[0]
+
+        const filename = decodeURI(downloadUrl.split("/")[ downloadUrl.split("/").length -1])
+
         const date = new Date
         
-        const result = { search, documentUrl, date, scrapedAt: date, downloadUrl} as DocumentUrlContentI
+        const result = { search, documentUrl, date, scrapedAt: date, downloadUrl, filename} as DocumentUrlContentI
 
         console.log(result)
 
@@ -90,21 +94,29 @@ export class LibgenUrlContentScraper extends ContentScraper {
             let url = await this.page.evaluate((a:any) => a.href, hrefv);
             urls.push(url)
         }
-        await this.page.click('h2>a')
+        
         return urls
     }
 
-    // async download(url:string, filename:string): Promise<void>{
-    //     const file = fs.createWriteStream(filename);
-    //     const request = http.get(url, function(response) {
-    //     response.pipe(file);
+     async download(url:string, filename:string): Promise<void>{
+        console.log("---------------------------------")
+        console.log("starting downloading url ", url)
+        console.log("---------------------------------")
 
-    //     // after download completed close filestream
-    //     file.on("finish", () => {
-    //         file.close();
-    //         console.log("Download Completed");
-    //     });
-    //     });
-    // }
+        const file = fs.createWriteStream(filename);
+        const request = http.get(url, function(response) {
+        response.pipe(file)
+        return new Promise((resolve, reject) => {
+            file.on("finish", () => {
+                file.close();
+                console.log("---------------------------------")
+                console.log("Download Completed");
+                console.log("---------------------------------")
+        
+                resolve("OK")
+            });
+        })
+        });
+     }
 
 }

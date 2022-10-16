@@ -7,6 +7,7 @@ export interface DocumentUrlContentSqlI {
     search: string
     documentUrl: string,
     downloadUrl: string
+    filename: string
     date: Date
     scrapedAt: Date
     content: string
@@ -30,7 +31,7 @@ export const newScrapedSqlAttributes = {
     documentUrl: {
         type: DataTypes.STRING,
     },
-    downloadUrl: {
+    filename: {
         type: DataTypes.STRING,
     },
     date: {
