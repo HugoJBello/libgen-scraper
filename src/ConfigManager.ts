@@ -8,6 +8,7 @@ export default class ConfigManager {
         const path = "./src/config/" + config.searchesFile
 
         const strSearches = await fs.readFileSync(path, "utf8")
-        return strSearches.split("\n")
+        const result =  strSearches.split("\n")
+        return result.filter(item => item !== "")
     }
 }

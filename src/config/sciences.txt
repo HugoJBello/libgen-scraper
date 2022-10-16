@@ -1,0 +1,22 @@
+
+Logic
+Data Science
+Information Science
+Mathematics
+Statistics
+Systems theory
+Decision theory
+Theoretical computer science
+Natural science
+Physical science
+Physics
+Chemistry
+Earth science
+Space science
+Life science
+Biochemistry
+Microbiology
+Botany
+Zoology
+Ecology
+
