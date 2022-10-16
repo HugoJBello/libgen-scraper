@@ -15,18 +15,24 @@ export class LibgenIndexScraper extends IndexScraper {
     }
 
     async extractNewsUrlsInSectionPageFromIndexOneIteration (scrapingIndex: ScrapingIndexI): Promise<string[]> {    
-        const currentUrl = this.getCurrentUrl(scrapingIndex.search)
-        const extractedUrls = await this.extractUrlsFromStartingUrl(currentUrl)
-        const uniqUrls = [...new Set(extractedUrls)];
+        const maxPages = scrapingIndex.maxPages || 3
+        let urls:string[] = []
+        for (let page =1; page<= maxPages; page++) {
+            const currentUrl = this.getCurrentUrl(scrapingIndex.search, page)
+            const extractedUrls = await this.extractUrlsFromStartingUrl(currentUrl)
+            urls=urls.concat(extractedUrls)
+        }
+        
+        const uniqUrls = [...new Set(urls)];
         return uniqUrls
     }
 
-    getCurrentUrl(search: string): string{
+    getCurrentUrl(search: string, page:number): string{
         let searchParam = search
         if(search.includes(" ")){
             searchParam = search.replace("/\s/g", "+")
         }
-        return this.baseLibgenUrl + searchParam
+        return this.baseLibgenUrl + searchParam + "&page=" + page
     }
 
     checkCorrectUrl(url:string) {

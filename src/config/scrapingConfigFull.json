@@ -9,12 +9,9 @@
   "useSqliteDb": true,
   "useMongoDb": false,
   "parentPath":"./data",
-  "searches": [
-    "virginia wolf",
-    "karl jung"
-  ],
+  "searchesFile":"searches.txt",
   "scrapingSettings": {
-      "maxPages": 1
+      "maxPages": 5
       
   }
 }

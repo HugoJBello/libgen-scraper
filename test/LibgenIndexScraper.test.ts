@@ -11,10 +11,10 @@ describe('LibgenIndexScraper 1', function () {
 
         const date = new Date()
         const testIndex = {
-            urlIndex: 0, pageNewIndex: 0, currentScrapingUrlList: ["http://libgen.st/search.php?req=karl+jung"]
+            urlIndex: 0, pageNewIndex: 0, search: "jung", currentScrapingUrlList: ["http://libgen.st/search.php?req=karl+jung"]
         } as unknown as ScrapingIndexI
 
-        const scraper = new LibgenIndexScraper();
+        const scraper = new LibgenIndexScraper("http://libgen.st/search.php?req=");
         scraper.maxPages=1
 
 

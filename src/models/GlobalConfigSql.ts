@@ -8,6 +8,7 @@ export interface GlobalConfigSqlSqlI {
     id: number;
     parentPath: string;
     baseLibgenUrl: string;
+    searchesFile: string;
 }
 
 export const globalConfigSqlAttributes = {
@@ -32,6 +33,9 @@ export const globalConfigSqlAttributes = {
         type: DataTypes.STRING,
     },
     baseLibgenUrl: {
+        type: DataTypes.STRING,
+    },
+    searchesFile: {
         type: DataTypes.STRING,
     }
 }

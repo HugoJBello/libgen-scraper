@@ -8,8 +8,9 @@
     "testOne": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -g",
     "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'test/**/*.ts'",
     "jobRunner": "node dist/jobRunnerScript.js",
-    "build": "tsc",
-    "build-w": "tsc -w"
+    "build": "npm run copy && tsc",
+    "copy": "cp -r ./src/config/ ./dist/",
+    "build-w": "npm run copy && tsc -w"
   },
   "dependencies": {
     "@types/bluebird": "^3.5.36",

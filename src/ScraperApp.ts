@@ -14,6 +14,7 @@ import { initDb } from './models/sequelizeConfig';
 import { LibgenIndexScraper } from './scrapers/LibgenIndexScraper';
 import { LibgenUrlContentScraper } from './scrapers/LibgenUrlContentScraper';
 import { DownloaderUrl } from './scrapers/DownloaderUrl';
+import ConfigManager from './ConfigManager';
 
 require('dotenv').config();
 
@@ -30,22 +31,26 @@ export default class ScraperApp {
     public joiningStr = "===="
     public globalConfig: GlobalConfigI;
     public persistenceManager: PersistenceManager
+    public configManager: ConfigManager
 
     public pageScraper: ContentScraper
     public urlSectionExtractorScraper: IndexScraper
     public downloader: DownloaderUrl
 
     constructor() {
+        this.configManager = new ConfigManager()
     }
 
     async loadIndexAndScrapers(): Promise<ScrapingIndexI[]> {
 
         this.persistenceManager = new PersistenceManager(this.config)
+        
         await this.prepareGlobalConfig()
 
         const searchessReordered = this.reorderSearchArrayStartingWithLastScraped()
+        console.log("-------------->>>>>", searchessReordered)
         this.pageScraper = new LibgenUrlContentScraper(),
-        this.urlSectionExtractorScraper =  new LibgenIndexScraper(this.config.baseLibgenUrl)
+        this.urlSectionExtractorScraper =  new LibgenIndexScraper(this.globalConfig.baseLibgenUrl)
 
         const indexes = [] as ScrapingIndexI[]
         for (let search of searchessReordered) {
@@ -74,19 +79,24 @@ export default class ScraperApp {
             globalConfig.scraperId = this.config.scraperId
             globalConfig.deviceId = this.config.deviceId
             globalConfig.baseLibgenUrl = this.config.baseLibgenUrl
-            globalConfig.lastSearch = this.config.searches[0]
             globalConfig.lastActive = new Date()
-            this.globalConfig = globalConfig
+
+            globalConfig.searchesFile = this.config.searchesFile
+
+            globalConfig.searches = await this.configManager.extractSearchesList(globalConfig)
+            globalConfig.lastSearch = globalConfig.searches[0]
+
             await this.persistenceManager.updateGlobalConfig(globalConfig)
-            
+            this.globalConfig = globalConfig
+
             this.downloader = new DownloaderUrl(globalConfig.parentPath)
         }
     }
 
     reorderSearchArrayStartingWithLastScraped():string[] {
         const currentSearch = this.globalConfig.lastSearch
-        const index = this.config.searches.indexOf(currentSearch)
-        const searchesReordered = this.config.searches.slice(index).concat(this.config.searches.slice(0, index))
+        const index = this.globalConfig.searches.indexOf(currentSearch)
+        const searchesReordered = this.globalConfig.searches.slice(index).concat(this.globalConfig.searches.slice(0, index))
         return searchesReordered
     }
 
@@ -119,8 +129,8 @@ export default class ScraperApp {
         indexScraper.scrapingIteration = 0
         indexScraper.pageNewIndex = 0
         indexScraper.search = search
-        indexScraper.scraperId = this.config.scraperId
-        indexScraper.deviceId = this.config.deviceId
+        indexScraper.scraperId =this.globalConfig.scraperId
+        indexScraper.deviceId = this.globalConfig.deviceId
         indexScraper.maxPages = this.config.scrapingSettings.maxPages 
         
         return indexScraper
@@ -171,7 +181,7 @@ export default class ScraperApp {
                 console.log(extractedNews)
                 await this.persistenceManager.saveNewsScraped(extractedNews)
 
-                await this.downloader.download(extractedNews.downloadUrl, extractedNews.filename, this.config.parentPath + "/" + extractedNews.search)
+                await this.downloader.download(extractedNews.downloadUrl, extractedNews.filename, this.globalConfig.parentPath + "/" + extractedNews.search)
             }
 
             scrapingIndex.pageNewIndex = scrapingIndex.pageNewIndex + 1

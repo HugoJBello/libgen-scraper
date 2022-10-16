@@ -10,5 +10,6 @@ export interface GlobalConfigI {
     parentPath: string;
     searches: string[];
     baseLibgenUrl: string;
+    searchesFile: string;
 }
 
