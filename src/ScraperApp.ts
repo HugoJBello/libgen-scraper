@@ -48,7 +48,6 @@ export default class ScraperApp {
         await this.prepareGlobalConfig()
 
         const searchessReordered = this.reorderSearchArrayStartingWithLastScraped()
-        console.log("-------------->>>>>", searchessReordered)
         this.pageScraper = new LibgenUrlContentScraper(),
         this.urlSectionExtractorScraper =  new LibgenIndexScraper(this.globalConfig.baseLibgenUrl)
 
@@ -183,7 +182,8 @@ export default class ScraperApp {
                 console.log(extractedNews)
                 await this.persistenceManager.saveNewsScraped(extractedNews)
 
-                await this.downloader.download(extractedNews.downloadUrl, extractedNews.filename, this.globalConfig.parentPath + "/" + extractedNews.search)
+                await this.downloader.download(extractedNews.downloadUrl, extractedNews.filename, this.globalConfig.parentPath + "/" + 
+                this.config.searchesFile.replace(".txt", "") +"/"+ extractedNews.search)
             }
 
             scrapingIndex.pageNewIndex = scrapingIndex.pageNewIndex + 1

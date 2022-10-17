@@ -9,7 +9,7 @@
   "useSqliteDb": true,
   "useMongoDb": false,
   "parentPath":"./data",
-  "searchesFile":"searches.txt",
+  "searchesFile":"sciences.txt",
   "scrapingSettings": {
       "maxPages": 5
       

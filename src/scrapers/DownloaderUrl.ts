@@ -9,13 +9,13 @@ export class DownloaderUrl {
     constructor(parentPath: string) {
         this.parentPath = parentPath
         if (!fs.existsSync(this.parentPath)){
-            fs.mkdirSync(this.parentPath);
+            fs.mkdirSync(this.parentPath, { recursive: true });
         }
     }
 
      async download(url:string, filename:string, path:string): Promise<void>{
         if (!fs.existsSync(path)){
-            fs.mkdirSync(path);
+            fs.mkdirSync(path, { recursive: true });
         }
 
         const filenameFull = path + "/" + filename
