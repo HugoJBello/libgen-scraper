@@ -1,4 +1,4 @@
-pm2 stop puppeteer_news_scraper
-pm2 delete puppeteer_news_scraper
-pm2 start npm --name "puppeteer_news_scraper" -- start
+pm2 stop puppeteer_libgen_scraper
+pm2 delete puppeteer_libgen_scraper
+pm2 start npm --name "puppeteer_libgen_scraper" -- start
 npm run jobRunner
