@@ -14,17 +14,14 @@ import {DocumentUrlContentI} from "./models/DocumentUrlContentI";
 import {ScrapingUrlsSql, ScrapingUrlsSqlI} from "./models/ScrapingUrlSql";
 import {GlobalConfigSql} from "./models/GlobalConfigSql";
 import {GlobalConfigI} from "./models/GlobalConfig";
-import ApiManager from './ApiManager';
 
 require('dotenv').config();
 
 export default class PersistenceManager {
     public config: ScrapingConfigI = {} as ScrapingConfigI
-    public apiManager: ApiManager
 
     constructor(config: ScrapingConfigI) {
         this.config = config
-        this.apiManager = new ApiManager(config)
     }
 
     async updateIndex(index: ScrapingIndexI) {
@@ -38,7 +35,6 @@ export default class PersistenceManager {
         indexDb.dateScraping = new Date()
 
 
-        await this.apiManager.saveScrapingIndex(index)
 
         if (this.config.useSqliteDb) {
             try {
@@ -120,9 +116,6 @@ export default class PersistenceManager {
         const conditions = {
             scraperId: this.config.scraperId,
         }
-
-        await this.apiManager.saveGlobalConfig(globalConfig)
-
 
         if (this.config.useSqliteDb) {
             const found = await GlobalConfigSql.findOne({where: conditions})

@@ -89,9 +89,8 @@ export default class ScraperApp {
 
             await this.persistenceManager.updateGlobalConfig(globalConfig)
             this.globalConfig = globalConfig
-
-            this.downloader = new DownloaderUrl(globalConfig.parentPath)
         }
+        this.downloader = new DownloaderUrl(globalConfig.parentPath)
     }
 
     reorderSearchArrayStartingWithLastScraped():string[] {
