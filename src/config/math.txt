@@ -25,13 +25,10 @@ Trigonometry
 
 
 
-Algebra
 Algebraic Geometry
 Algebraic Topology
-Analysis 
 PDEs
 Geometry 
-Topology
 Mathematical Logic
 Number Theory
 Probability 
@@ -64,15 +61,11 @@ Topology
 Trigonometry
 Vectors
 
-Algebra
-Calculus
 Category theory
 Discrete mathematics
 Geometry
-Mathematical analysis
 Mathematical logic
 Number theory
-Topology
 
 Continuum and Fluid Mechanics
 Control Theory
