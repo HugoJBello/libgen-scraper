@@ -1,6 +1,6 @@
-Algebra
-Analysis
+Mathematical Analysis
 Arithmetic
+Algebra
 Calculus
 Combinatorial game theory
 Cryptography
