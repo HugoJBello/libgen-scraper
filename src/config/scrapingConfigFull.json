@@ -6,12 +6,10 @@
   "apiUrl2":"http://localhost:3000",
   "baseLibgenUrl" : "http://libgen.st/search.php?req=",
   "apiUrl":"https://walrus-app-kitxm.ondigitalocean.app/news-scraper-api2",
-  "useSqliteDb": true,
-  "useMongoDb": false,
   "parentPath":"./data",
   "searchesFile":"sciences.txt",
   "scrapingSettings": {
-      "maxPages": 5
+      "maxPages": 1
       
   }
 }

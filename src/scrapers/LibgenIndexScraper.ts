@@ -15,6 +15,11 @@ export class LibgenIndexScraper extends IndexScraper {
     }
 
     async extractNewsUrlsInSectionPageFromIndexOneIteration (scrapingIndex: ScrapingIndexI): Promise<string[]> {    
+        try {
+            await this.initializePuppeteer();
+         
+        
+        console.log("*********************************", scrapingIndex)
         const maxPages = scrapingIndex.maxPages || 3
         let urls:string[] = []
         for (let page =1; page<= maxPages; page++) {
@@ -24,7 +29,16 @@ export class LibgenIndexScraper extends IndexScraper {
         }
         
         const uniqUrls = [...new Set(urls)];
+        
+        await this.browser.close();
+
         return uniqUrls
+        } catch (err) {
+            console.log(err);
+            await this.page.screenshot({ path: 'error_extract_new.png' });
+            await this.browser.close();
+            throw err
+        }
     }
 
     getCurrentUrl(search: string, page:number): string{
@@ -63,7 +77,6 @@ export class LibgenIndexScraper extends IndexScraper {
         console.log("************");
         const urls: string[] = []
 
-        await this.initializePuppeteer();
 
         try {
             await this.page.goto(pageUrl, {waitUntil: 'load', timeout: 0});

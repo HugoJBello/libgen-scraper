@@ -37,18 +37,9 @@ export class LibgenUrlContentScraper extends ContentScraper {
             return {} as DocumentUrlContentI
         }
 
-
-
-
         try {
             await this.initializePuppeteer();
-        } catch (e) {
-            console.log("error initializing")
-        }
-
-
-
-        try {
+  
             try {
                 await this.page.goto(documentUrl, {waitUntil: 'load', timeout: 0});
             } catch (e) {
@@ -56,27 +47,30 @@ export class LibgenUrlContentScraper extends ContentScraper {
             }
 
 
-        const urls = await this.extractUrlsFromPage()
-        console.log(urls)
-        const downloadUrl = urls[0]
+            const urls = await this.extractUrlsFromPage()
+            console.log(urls)
+            const downloadUrl = urls[0]
 
-        const filename = decodeURI(downloadUrl.split("/")[ downloadUrl.split("/").length -1])
+            const filename = decodeURI(downloadUrl.split("/")[ downloadUrl.split("/").length -1])
 
-        const date = new Date
-        const id = v4()
-        
-        const result = {id, search, documentUrl, date, scrapedAt: date, downloadUrl, filename} as DocumentUrlContentI
+            const date = new Date
+            const id = v4()
+            
+            const result = {id, search, documentUrl, date, scrapedAt: date, downloadUrl, filename} as DocumentUrlContentI
 
-        console.log(result)
+            console.log(result)
 
-        return result
-        
+            await this.browser.close();
+
+            return result
+
         } catch (err) {
             console.log(err);
             await this.page.screenshot({path: 'error_extract_new.png'});
             await this.browser.close();
             return null;
         }
+        
     }
 
 

@@ -41,6 +41,73 @@ export default class ScraperApp {
         this.configManager = new ConfigManager()
     }
 
+
+    async startScraper() {
+        await initDb()
+
+        const indexes = await this.loadIndexAndScrapers()
+        let continueScraping = true;
+        while (continueScraping) for (let index of indexes) {
+            try {
+                await this.scrapOneIterationFromOneScraper(index)
+            } catch (e) {
+                console.log("----------------------------------")
+                console.log("ERROR")
+                console.log(e)
+                console.log("----------------------------------")
+            }
+        }
+    }
+
+    async scrapOneIterationFromOneScraper(scrapingIndex: ScrapingIndexI) {
+        console.log("-----------------")
+        console.log(scrapingIndex)
+
+        await this.refreshGlobalConfigFromIndex(scrapingIndex)
+        const urls = await this.urlSectionExtractorScraper.extractNewsUrlsInSectionPageFromIndexOneIteration(scrapingIndex)
+        scrapingIndex.currentScrapingUrlList = urls
+
+        console.log("--->  starting scraping urls ")
+        console.log(urls)
+
+        if (scrapingIndex.pageNewIndex >= urls.length - 1) {
+            scrapingIndex.pageNewIndex = 0
+        }
+
+        await this.persistenceManager.updateIndex(scrapingIndex)
+
+        while (scrapingIndex.pageNewIndex <= urls.length - 1) {
+
+            const url = urls[scrapingIndex.pageNewIndex]
+            if (url) {
+                console.log("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-")
+                console.log("scraping url " + "page: " + scrapingIndex.pageNewIndex + " url number: " + scrapingIndex.urlIndex + " search: " +  scrapingIndex.search)
+                console.log(url)
+                console.log("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-")
+
+                let extractedNews = await this.pageScraper.extractNewInUrl(url, scrapingIndex.search, scrapingIndex.scraperId, 
+                    scrapingIndex.pageNewIndex, scrapingIndex.scrapingIteration)
+                console.log(extractedNews)
+                await this.persistenceManager.saveNewsScraped(extractedNews)
+
+                try{
+                    await this.downloader.download(extractedNews.downloadUrl, extractedNews.filename, this.globalConfig.parentPath + "/" + 
+                    this.config.searchesFile.replace(".txt", "") +"/"+ extractedNews.search)
+
+                } catch (err){
+                    console.log("error downloading")  
+                }
+            }
+
+            scrapingIndex.pageNewIndex = scrapingIndex.pageNewIndex + 1
+            await this.persistenceManager.updateIndex(scrapingIndex)
+            await this.refreshGlobalConfigFromIndex(scrapingIndex)
+        }
+
+        await this.setUpNextIteration(scrapingIndex)
+    }
+
+
     async loadIndexAndScrapers(): Promise<ScrapingIndexI[]> {
 
         this.persistenceManager = new PersistenceManager(this.config)
@@ -134,63 +201,6 @@ export default class ScraperApp {
         indexScraper.maxPages = this.config.scrapingSettings.maxPages 
         
         return indexScraper
-    }
-
-    async startScraper() {
-        await initDb()
-
-        const indexes = await this.loadIndexAndScrapers()
-        let continueScraping = true;
-
-        while (continueScraping) for (let index of indexes) {
-            try {
-                await this.scrapOneIterationFromOneScraper(index)
-            } catch (e) {
-                console.log("----------------------------------")
-                console.log("ERROR")
-                console.log(e)
-                console.log("----------------------------------")
-            }
-        }
-    }
-
-    async scrapOneIterationFromOneScraper(scrapingIndex: ScrapingIndexI) {
-        
-        await this.refreshGlobalConfigFromIndex(scrapingIndex)
-        const urls = await this.urlSectionExtractorScraper.extractNewsUrlsInSectionPageFromIndexOneIteration(scrapingIndex)
-        scrapingIndex.currentScrapingUrlList = urls
-        console.log("--->  starting scraping urls ")
-        console.log(urls)
-
-        if (scrapingIndex.pageNewIndex >= urls.length - 1) {
-            scrapingIndex.pageNewIndex = 0
-            await this.persistenceManager.updateIndex(scrapingIndex)
-        }
-
-        while (scrapingIndex.pageNewIndex <= urls.length - 1) {
-
-            const url = urls[scrapingIndex.pageNewIndex]
-            if (url) {
-                console.log("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-")
-                console.log("scraping url " + "page: " + scrapingIndex.pageNewIndex + " url number: " + scrapingIndex.urlIndex)
-                console.log(url)
-                console.log("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-")
-
-                let extractedNews = await this.pageScraper.extractNewInUrl(url, scrapingIndex.search, scrapingIndex.scraperId, 
-                    scrapingIndex.pageNewIndex, scrapingIndex.scrapingIteration)
-                console.log(extractedNews)
-                await this.persistenceManager.saveNewsScraped(extractedNews)
-
-                await this.downloader.download(extractedNews.downloadUrl, extractedNews.filename, this.globalConfig.parentPath + "/" + 
-                this.config.searchesFile.replace(".txt", "") +"/"+ extractedNews.search)
-            }
-
-            scrapingIndex.pageNewIndex = scrapingIndex.pageNewIndex + 1
-            await this.persistenceManager.updateIndex(scrapingIndex)
-            await this.refreshGlobalConfigFromIndex(scrapingIndex)
-        }
-
-        await this.setUpNextIteration(scrapingIndex)
     }
 
     async setUpNextIteration(scrapingIndex: ScrapingIndexI) {

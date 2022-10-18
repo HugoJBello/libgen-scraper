@@ -63,8 +63,6 @@ export default class PersistenceManager {
             scraperId: this.config.scraperId,
             search: search
         }
-
-        if (this.config.useSqliteDb) {
             try {
                 const startingUrlsSql = await ScrapingUrlsSql.findAll({where: conditions})
 
@@ -79,9 +77,6 @@ export default class PersistenceManager {
                 console.log("error saving using sqlite")
                 throw e
             }
-
-        }
-
         return index
     }
 
