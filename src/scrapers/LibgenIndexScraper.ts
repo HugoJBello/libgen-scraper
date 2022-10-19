@@ -24,6 +24,7 @@ export class LibgenIndexScraper extends IndexScraper {
         let urls:string[] = []
         for (let page =1; page<= maxPages; page++) {
             const currentUrl = this.getCurrentUrl(scrapingIndex.search, page)
+            console.log(currentUrl)
             const extractedUrls = await this.extractUrlsFromStartingUrl(currentUrl)
             urls=urls.concat(extractedUrls)
         }
@@ -83,8 +84,6 @@ export class LibgenIndexScraper extends IndexScraper {
             await this.page.goto(pageUrl, {waitUntil: 'load', timeout: 0});
 
             const urlsInPage = await  this.extractUrlsFromPage();
-
-            await this.browser.close();
 
             return urlsInPage
 

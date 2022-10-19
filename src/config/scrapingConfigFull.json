@@ -9,7 +9,7 @@
   "parentPath":"./data",
   "searchesFile":"sciences.txt",
   "scrapingSettings": {
-      "maxPages": 1
+      "maxPages": 4
       
   }
 }
