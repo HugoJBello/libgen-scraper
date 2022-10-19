@@ -50,7 +50,7 @@ export default class PersistenceManager {
                 }
             } catch (e) {
                 console.log("ERROR UPDATING INDEX sqlite")
-                throw e
+                //throw e
             }
         }
 
@@ -74,8 +74,8 @@ export default class PersistenceManager {
                     index = null
                 }
             } catch (e) {
-                console.log("error saving using sqlite")
-                throw e
+                console.log("error updating index using sqlite")
+                //throw e
             }
         return index
     }
@@ -99,7 +99,7 @@ export default class PersistenceManager {
                 }
             } catch (e) {
                 console.log("error saving global config using sqlite")
-                throw e
+                //throw e
             }
 
         }
@@ -145,7 +145,7 @@ export default class PersistenceManager {
                 }
             } catch (e) {
                 console.log("ERROR SAVING sqlite")
-                throw e
+                //throw e
             }
         }
 

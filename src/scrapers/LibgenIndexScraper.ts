@@ -37,7 +37,8 @@ export class LibgenIndexScraper extends IndexScraper {
             console.log(err);
             await this.page.screenshot({ path: 'error_extract_new.png' });
             await this.browser.close();
-            throw err
+            //throw err
+            return []
         }
     }
 

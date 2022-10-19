@@ -68,7 +68,7 @@ export class LibgenUrlContentScraper extends ContentScraper {
             console.log(err);
             await this.page.screenshot({path: 'error_extract_new.png'});
             await this.browser.close();
-            return null;
+            return {} as DocumentUrlContentI
         }
         
     }
