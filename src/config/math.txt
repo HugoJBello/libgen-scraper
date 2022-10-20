@@ -82,12 +82,10 @@ Probability Theory
 Information Theory
 Operations Research
 
+
 Scientific computing
 Computer science
 Operations research and management science
 Statistics
 Actuarial science
 Mathematical economics
-
-
-
