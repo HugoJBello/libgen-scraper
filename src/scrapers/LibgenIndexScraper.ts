@@ -22,7 +22,7 @@ export class LibgenIndexScraper extends IndexScraper {
         console.log("*********************************", scrapingIndex)
         const maxPages = scrapingIndex.maxPages || 3
         let urls:string[] = []
-        for (let page =1; page<= maxPages; page++) {
+        for (let page =1; page <= maxPages; page++) {
             const currentUrl = this.getCurrentUrl(scrapingIndex.search, page)
             console.log(currentUrl)
             const extractedUrls = await this.extractUrlsFromStartingUrl(currentUrl)

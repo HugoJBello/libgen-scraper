@@ -7,9 +7,9 @@
   "baseLibgenUrl" : "http://libgen.st/search.php?req=",
   "apiUrl":"https://walrus-app-kitxm.ondigitalocean.app/news-scraper-api2",
   "parentPath":"./data",
-  "searchesFile":"sciences.txt",
+  "searchesFile":"math.txt",
   "scrapingSettings": {
-      "maxPages": 4
+      "maxPages": 10
       
   }
 }
