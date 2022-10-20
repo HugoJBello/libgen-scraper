@@ -49,7 +49,7 @@ Logic for Computer Scientists
 Abstract Algebra
 Data Structures
 Discrete Mathematics
-File Checksum Integrity Verifier (FCIV) Examples
+File Checksum Integrity Verifier
 Geometry for Elementary School
 Group Theory
 Intermediate Algebra
