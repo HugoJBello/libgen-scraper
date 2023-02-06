@@ -7,7 +7,7 @@
   "baseLibgenUrl" : "http://libgen.st/search.php?req=",
   "apiUrl":"https://walrus-app-kitxm.ondigitalocean.app/news-scraper-api2",
   "parentPath":"./data",
-  "searchesFile":"philosophy_en.txt",
+  "searchesFile":"philosophy_es.txt",
   "scrapingSettings": {
       "maxPages": 15
       
