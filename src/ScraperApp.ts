@@ -55,6 +55,8 @@ export default class ScraperApp {
                 console.log("ERROR")
                 console.log(e)
                 console.log("----------------------------------")
+
+                await this.setUpNextIteration(index)
             }
         }
     }
@@ -79,24 +81,30 @@ export default class ScraperApp {
         while (scrapingIndex.pageNewIndex <= urls.length - 1) {
 
             const url = urls[scrapingIndex.pageNewIndex]
-            if (url) {
-                console.log("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-")
-                console.log("scraping url " + "page: " + scrapingIndex.pageNewIndex + " url number: " + scrapingIndex.urlIndex + " search: " +  scrapingIndex.search)
-                console.log(url)
-                console.log("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-")
 
-                let extractedNews = await this.pageScraper.extractNewInUrl(url, scrapingIndex.search, scrapingIndex.scraperId, 
-                    scrapingIndex.pageNewIndex, scrapingIndex.scrapingIteration)
-                console.log(extractedNews)
-                await this.persistenceManager.saveNewsScraped(extractedNews)
+            try{
+                if (url) {
+                        console.log("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-")
+                        console.log("scraping url " + "page: " + scrapingIndex.pageNewIndex + " url number: " + scrapingIndex.urlIndex + " search: " +  scrapingIndex.search)
+                        console.log(url)
+                        console.log("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-")
 
-                try{
-                    await this.downloader.download(extractedNews.downloadUrl, extractedNews.filename, this.globalConfig.parentPath + "/" + 
-                    this.config.searchesFile.replace(".txt", "") +"/"+ extractedNews.search)
+                        let extractedNews = await this.pageScraper.extractNewInUrl(url, scrapingIndex.search, scrapingIndex.scraperId, 
+                            scrapingIndex.pageNewIndex, scrapingIndex.scrapingIteration)
+                        console.log(extractedNews)
+                        await this.persistenceManager.saveNewsScraped(extractedNews)
 
-                } catch (err){
-                    console.log("error downloading")  
+                        try{
+                            await this.downloader.download(extractedNews.downloadUrl, extractedNews.filename, this.globalConfig.parentPath + "/" + 
+                            this.config.searchesFile.replace(".txt", "") +"/"+ extractedNews.search)
+
+                        } catch (err){
+                            console.log("error downloading")  
+                            throw err
+                        }
                 }
+            } catch (err){
+                console.log(err)
             }
 
             scrapingIndex.pageNewIndex = scrapingIndex.pageNewIndex + 1
