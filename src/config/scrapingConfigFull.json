@@ -3,6 +3,7 @@
   "deviceId": "deviceLaptop",
   "appId": "deviceTestApp",
   "libgenUrl":"",
+  "useSqliteDb": true,
   "apiUrl2":"http://localhost:3000",
   "baseLibgenUrl" : "http://libgen.st/search.php?req=",
   "apiUrl":"https://walrus-app-kitxm.ondigitalocean.app/news-scraper-api2",

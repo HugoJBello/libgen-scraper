@@ -17,7 +17,7 @@ export class JobRunner {
 
     async jobRestartPm2() {
         try{
-            const command = "/home/goku/.nvm/versions/node/v15.14.0/bin/pm2 restart all"
+            const command = "/home/krillin/.nvm/versions/node/v18.14.0/bin/pm2 restart all"
             return await this.runCommand(command)
         } catch (e){
             console.log("using alternative command");

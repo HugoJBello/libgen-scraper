@@ -11,5 +11,6 @@ export interface GlobalConfigI {
     searches: string[];
     baseLibgenUrl: string;
     searchesFile: string;
+    useSqliteDb: boolean;
 }
 
